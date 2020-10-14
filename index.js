@@ -16,20 +16,12 @@ dbConnection();
 //Midelware
 app.use(cors());
 
-//Rutas
-app.get('/', (req, res) => {
-    res.json({
-        ok: true,
-        message: 'Hola mundo'
-    })
-});
+//Leer el body
+app.use(express.json());
 
-app.get('/message', (req, res) => {
-    res.status(400).json({
-        ok: true,
-        messaje: 'Esta es una peticion hacia otra ruta we'
-    })
-});
+//Rutas
+app.use('/users', require('./routes/users.routes'));
+app.use('/login', require('./routes/auth.routes'))
 
 //Levantando el servidor
 app.listen(process.env.PORT, () => {
