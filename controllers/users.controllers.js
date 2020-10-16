@@ -6,19 +6,25 @@ const { request, response } = require('express');
 //Obtener usuarios
 const getUsers = (req, res) => {
 
-    User.find((err, usersDB) => {
-        if (err) {
-            return res.status(400).json({
-                ok: false,
-                err
-            })
-        }
+    let skip = Number(req.query.skip) || 0;
+    let limit = Number(req.query.limit) || 10;
 
-        res.json({
-            ok: true,
-            user: usersDB
+    User.find()
+        .skip(skip)
+        .limit(limit)
+        .exec((err, usersDB) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                })
+            }
+
+            res.json({
+                ok: true,
+                user: usersDB
+            })
         })
-    })
 
 }
 
@@ -54,9 +60,18 @@ const updateUser = (req, res) => {
 
     User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
         if (err) {
-            return res.status(400).json({
+            return res.status(500).json({
                 ok: false,
                 err
+            })
+        }
+
+        if (!userDB) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: 'Requisitos invalidos'
+                }
             })
         }
 

@@ -1,2 +1,5 @@
 node_modules/
 .env
+uploads/hospital/
+uploads/medic/
+uploads/user/

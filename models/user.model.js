@@ -9,8 +9,8 @@ const userSchema = Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: [true, 'El email, es necesario']
+        required: [true, 'El email, es necesario'],
+        unique: true
 
     },
     password: {
@@ -54,6 +54,6 @@ userSchema.methods.toJSON = function() {
     return userObject;
 }
 
-userSchema.plugin(uniqueValidator, { message: '{PATH} deve ser unico' })
+userSchema.plugin(uniqueValidator, { message: '{PATH} deve ser unico' });
 
 module.exports = model('User', userSchema);
