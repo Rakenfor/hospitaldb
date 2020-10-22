@@ -9,22 +9,33 @@ const getUsers = (req, res) => {
     let skip = Number(req.query.skip) || 0;
     let limit = Number(req.query.limit) || 10;
 
-    User.find()
-        .skip(skip)
-        .limit(limit)
-        .exec((err, usersDB) => {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    err
-                })
-            }
-
-            res.json({
-                ok: true,
-                user: usersDB
+    //Cambiar esta linea
+    User.countDocuments({ state: true }, (err, quantity) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
             })
-        })
+        }
+
+        User.find({ state: true })
+            .skip(skip)
+            .limit(limit)
+            .exec((err, usersDB) => {
+                if (err) {
+                    return res.status(400).json({
+                        ok: false,
+                        err
+                    })
+                }
+
+                res.json({
+                    ok: true,
+                    users: usersDB,
+                    total: quantity
+                })
+            })
+    });
 
 }
 

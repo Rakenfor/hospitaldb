@@ -147,7 +147,7 @@ router.put('/:type/:id', tokenVerify, (req, res) => {
 
                     res.json({
                         ok: true,
-                        userDB
+                        user: userDB
                     })
 
                 });

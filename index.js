@@ -1,5 +1,6 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+
 //Para leer las variables de entorno
 require('dotenv').config();
 
@@ -9,6 +10,14 @@ const { dbConnection } = require('./database/config');
 
 //Creando el servidor express
 const app = express();
+
+//CORS: Configuracion donde se hacepta peticiones
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+    next();
+});
 
 //base de datos
 dbConnection();

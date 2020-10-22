@@ -17,12 +17,7 @@ router.get('/:type/:img', (req, res) => {
     if (fs.existsSync(pathImage)) {
         res.sendFile(pathImage);
     } else {
-        res.status(400).json({
-            ok: false,
-            err: {
-                message: 'La imagen no existe'
-            }
-        })
+        res.sendFile(path.resolve(__dirname, '../uploads/no-found.png'));
     }
 
 });

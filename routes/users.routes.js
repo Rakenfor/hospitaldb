@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/', tokenVerify, getUsers);
 
-router.post('/', tokenVerify, createUser);
+router.post('/', createUser);
 
 router.put('/:id', tokenVerify, updateUser);
 
