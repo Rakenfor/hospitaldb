@@ -8,23 +8,37 @@ getHospitals = (req = request, res = response) => {
     let skip = Number(req.query.skip) || 0;
     let limit = Number(req.query.limit) || 10;
 
-    Hospital.find()
-        .populate('user')
-        .skip(skip)
-        .limit(limit)
-        .exec((err, hospitalsDB) => {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    err
-                })
-            }
-            res.json({
-                ok: true,
-                hospital: hospitalsDB
+    Hospital.countDocuments({ state: true }, (err, total) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            })
+        }
+
+        Hospital.find({ state: true })
+            .populate('user')
+            .skip(skip)
+            .limit(limit)
+            .exec((err, hospitalsDB) => {
+                if (err) {
+                    return res.status(400).json({
+                        ok: false,
+                        err
+                    })
+                }
+                res.json({
+                    ok: true,
+                    hospitals: hospitalsDB,
+                    total
+                });
             });
-        });
+
+    });
+
+
 }
+
 
 //Crear hospital
 createHospital = (req = request, res = response) => {
@@ -57,10 +71,13 @@ updateHospital = (req = request, res = response) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'user']);
-    body = req.user._id
+    console.log(body);
+    body.user = req.user._id
+    console.log(req.user);
+    console.log(body);
 
     //Error en run vaulidators
-    Hospital.findByIdAndUpdate(id, body, { new: true }, (err, hospitalDB) => {
+    Hospital.findById(id, (err, hospitalDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -68,20 +85,50 @@ updateHospital = (req = request, res = response) => {
             })
         }
 
-        if (!hospitalDB) {
-            return res.status(400).json({
-                ok: false,
-                err: {
-                    message: 'Requisitos invalidos'
-                }
-            })
-        }
+        console.log(hospitalDB);
 
-        res.json({
-            ok: true,
-            hospital: hospitalDB
+        hospitalDB.name = body.name;
+        hospitalDB.user = body.user
+
+        console.log(hospitalDB);
+
+        hospitalDB.save((err, newHospitalDB) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                })
+            }
+
+            res.json({
+                ok: true,
+                hospital: newHospitalDB
+            });
         });
-    });
+    })
+
+    // Hospital.findByIdAndUpdate(id, body, { new: true }, (err, hospitalDB) => {
+    //     if (err) {
+    //         return res.status(500).json({
+    //             ok: false,
+    //             err
+    //         })
+    //     }
+
+    //     if (!hospitalDB) {
+    //         return res.status(400).json({
+    //             ok: false,
+    //             err: {
+    //                 message: 'Requisitos invalidos'
+    //             }
+    //         })
+    //     }
+
+    //     res.json({
+    //         ok: true,
+    //         hospital: hospitalDB
+    //     });
+    // });
 
 
 }

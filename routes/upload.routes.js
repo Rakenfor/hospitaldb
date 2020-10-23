@@ -104,7 +104,7 @@ router.put('/:type/:id', tokenVerify, (req, res) => {
 
                     res.json({
                         ok: true,
-                        hospitalDB
+                        hospital: hospitalDB
                     })
 
                 });
@@ -188,7 +188,7 @@ router.put('/:type/:id', tokenVerify, (req, res) => {
 
                     res.json({
                         ok: true,
-                        medicDB
+                        medic: medicDB
                     })
 
                 });
