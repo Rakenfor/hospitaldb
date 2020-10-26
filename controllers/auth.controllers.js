@@ -52,11 +52,42 @@ const login = (req = request, res = response) => {
         res.json({
             ok: true,
             user: userDB,
-            token
+            token,
+            menu: getMenu(userDB.role)
         })
 
     });
 
+}
+
+getMenu = (ROLE) => {
+    let menu = [{
+            title: 'Principal',
+            icon: 'mdi mdi-gauge',
+            submenu: [
+                { title: 'Dasboard', url: '/dashboard' },
+                { title: 'progress', url: '/progress' },
+                { title: 'Graphics', url: '/graphics1' },
+                { title: 'Promesas', url: '/promesas' },
+                { title: 'rxjs', url: '/rxjs' }
+            ]
+        },
+        {
+            title: 'Matenimiento',
+            icon: 'mdi mdi-folder-lock-open',
+            submenu: [
+                { title: 'Médicos', url: '/medics' },
+                { title: 'Hospitales', url: '/hospitals' },
+            ]
+        }
+    ];
+
+    if (ROLE === 'ADMIN_ROLE') {
+        menu[1].submenu.unshift({ title: 'Usuarios', url: '/users' });
+    }
+    console.log(ROLE);
+
+    return menu;
 }
 
 module.exports = {

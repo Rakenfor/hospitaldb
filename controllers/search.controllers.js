@@ -14,7 +14,11 @@ generalSearch = (req = request, res = response) => {
         .then((data) => {
             res.json({
                 ok: true,
-                results: data
+                results: {
+                    users: data[0].users,
+                    hospitals: data[1].hospitals,
+                    medics: data[2].medics
+                }
             })
         })
         .catch((err) => {
@@ -23,7 +27,6 @@ generalSearch = (req = request, res = response) => {
                 err
             })
         })
-
 }
 
 //Busqueda por coleccion
@@ -67,7 +70,7 @@ collectionSearch = (req = request, res = response) => {
 
 searchUsers = (regex) => {
     return new Promise((resolve, reject) => {
-        User.find({ name: regex })
+        User.find({ name: regex, state: true })
             .exec((err, usersDB) => {
                 if (err) {
                     reject({
@@ -83,7 +86,7 @@ searchUsers = (regex) => {
 
 searchHospitals = (regex) => {
     return new Promise((resolve, reject) => {
-        Hospital.find({ name: regex })
+        Hospital.find({ name: regex, state: true })
             .exec((err, HospitalsDB) => {
                 if (err) {
                     reject({
@@ -99,7 +102,9 @@ searchHospitals = (regex) => {
 
 searchMedics = (regex) => {
     return new Promise((resolve, reject) => {
-        Medic.find({ name: regex })
+        Medic.find({ name: regex, state: true })
+            .populate('user')
+            .populate('hospital')
             .exec((err, MedicsDB) => {
                 if (err) {
                     reject({

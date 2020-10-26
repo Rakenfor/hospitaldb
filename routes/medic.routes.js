@@ -8,6 +8,7 @@ const {
     createMedic,
     updateMedic,
     removeMedic,
+    getMedic
 } = require('../controllers/medic.controllers')
 
 const router = Router();
@@ -15,6 +16,9 @@ const router = Router();
 
 //Get
 router.get('/', getMedics);
+
+//Get un solo medico
+router.get('/:id', getMedic);
 
 //post
 router.post('/', tokenVerify, createMedic);

@@ -31,7 +31,6 @@ router.put('/:type/:id', tokenVerify, (req, res) => {
     let file = req.files.file;
     let fileCut = file.name.split('.');
     let extention = fileCut[fileCut.length - 1];
-    console.log(extention);
 
     let permit = ['jpg', 'png', 'gif', 'jpeg'];
     let collections = ['hospital', 'medic', 'user'];

@@ -9,7 +9,7 @@ getMedics = (req = request, res = response) => {
     let skip = Number(req.query.skip) || 0;
     let limit = Number(req.query.limit) || 10;
 
-    Medic.find()
+    Medic.find({ state: true })
         .populate('user')
         .populate('hospital')
         .skip(skip)
@@ -26,6 +26,27 @@ getMedics = (req = request, res = response) => {
             res.json({
                 ok: true,
                 medics: medicsDB
+            })
+
+        });
+}
+
+getMedic = (req = request, res = response) => {
+    let id = req.params.id;
+    Medic.find({ _id: id })
+        .populate('user')
+        .populate('hospital')
+        .exec((err, medicDB) => {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.json({
+                ok: true,
+                medic: medicDB
             })
 
         });
@@ -122,5 +143,6 @@ module.exports = {
     getMedics,
     createMedic,
     updateMedic,
-    removeMedic
+    removeMedic,
+    getMedic
 }

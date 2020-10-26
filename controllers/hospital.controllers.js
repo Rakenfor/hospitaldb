@@ -71,10 +71,7 @@ updateHospital = (req = request, res = response) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['name', 'user']);
-    console.log(body);
     body.user = req.user._id
-    console.log(req.user);
-    console.log(body);
 
     //Error en run vaulidators
     Hospital.findById(id, (err, hospitalDB) => {
@@ -85,12 +82,8 @@ updateHospital = (req = request, res = response) => {
             })
         }
 
-        console.log(hospitalDB);
-
         hospitalDB.name = body.name;
         hospitalDB.user = body.user
-
-        console.log(hospitalDB);
 
         hospitalDB.save((err, newHospitalDB) => {
             if (err) {
@@ -106,29 +99,6 @@ updateHospital = (req = request, res = response) => {
             });
         });
     })
-
-    // Hospital.findByIdAndUpdate(id, body, { new: true }, (err, hospitalDB) => {
-    //     if (err) {
-    //         return res.status(500).json({
-    //             ok: false,
-    //             err
-    //         })
-    //     }
-
-    //     if (!hospitalDB) {
-    //         return res.status(400).json({
-    //             ok: false,
-    //             err: {
-    //                 message: 'Requisitos invalidos'
-    //             }
-    //         })
-    //     }
-
-    //     res.json({
-    //         ok: true,
-    //         hospital: hospitalDB
-    //     });
-    // });
 
 
 }
